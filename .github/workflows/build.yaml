@@ -28,8 +28,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-        with:
-          fetch-depth: 1
       - name: Get faas-cli
         run: curl -sLSf https://cli.openfaas.com | sudo sh
       - name: Set up Go
