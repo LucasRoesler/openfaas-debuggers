@@ -2,28 +2,13 @@
 name: build
 
 on:
-  push:
-    branches:
-      - '*'
-  pull_request:
-    branches:
+  create:
+    tags:
       - '*'
 
 jobs:
   lint:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
-        with:
-          version: v1.31
-          working-directory: echo
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
-        with:
-          version: v1.31
-          working-directory: status-echo
   build:
     runs-on: ubuntu-latest
     steps:
@@ -61,4 +46,5 @@ jobs:
           OWNER="${{ steps.get_repo_owner.outputs.repo_owner }}"
           TAG="${{ steps.get_tag.outputs.tag }}"
           faas-cli publish
+          --extra-tag latest
           --platforms linux/amd64,linux/arm/v7,linux/arm64
