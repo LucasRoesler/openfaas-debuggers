@@ -44,5 +44,6 @@ jobs:
           OWNER="${{ steps.get_repo_owner.outputs.repo_owner }}"
           TAG="${{ steps.get_tag.outputs.tag }}"
           faas-cli publish
+          --build-arg GO111MODULE=on
           --extra-tag latest
           --platforms linux/amd64,linux/arm/v7,linux/arm64

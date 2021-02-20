@@ -8,8 +8,6 @@ configuration:
   templates:
     - name: golang-middleware
       source: https://github.com/openfaas/golang-http-template
-    - name: golang-http
-      source: https://github.com/openfaas/golang-http-template
 
 functions:
   status-echo:
@@ -17,11 +15,11 @@ functions:
     handler: ./status-echo
     image: ghcr.io/${OWNER:-lucasroesler}/status-echo:${TAG:-latest}
   echo:
-    lang: golang-http
+    lang: golang-middleware
     handler: ./echo
     image: ghcr.io/${OWNER:-lucasroesler}/echo:${TAG:-latest}
   nats-publisher:
-    lang: golang-http
+    lang: golang-middleware
     handler: ./nats-publisher
     image: ghcr.io/${OWNER:-lucasroesler}/nats-publisher:${TAG:-latest}
     build-args:
@@ -29,7 +27,7 @@ functions:
     environment:
       nats_url: nats://nats.openfaas:4222
   nats-receiver:
-    lang: golang-http
+    lang: golang-middleware
     handler: ./nats-receiver
     image: ghcr.io/${OWNER:-lucasroesler}/nats-receiver:${TAG:-latest}
     annotations:

@@ -3,12 +3,12 @@ package function
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 
 	nats "github.com/nats-io/nats.go"
-	handler "github.com/openfaas/templates-sdk/go-http"
 )
 
 var (
@@ -17,10 +17,20 @@ var (
 )
 
 // Handle a serverless request
-func Handle(req handler.Request) (handler.Response, error) {
+func Handle(w http.ResponseWriter, r *http.Request) {
+
 	msg := defaultMessage
-	if len(req.Body) > 0 {
-		msg = string(bytes.TrimSpace(req.Body))
+	if r.Body != nil {
+		defer r.Body.Close()
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Printf("error reading body: %s", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		msg = string(bytes.TrimSpace(body))
 	}
 
 	natsURL := nats.DefaultURL
@@ -33,15 +43,17 @@ func Handle(req handler.Request) (handler.Response, error) {
 	if err != nil {
 		errMsg := fmt.Sprintf("can not connect to nats: %s", err)
 		log.Print(errMsg)
-		r := handler.Response{
-			Body:       []byte(errMsg),
-			StatusCode: http.StatusInternalServerError,
+
+		w.WriteHeader(http.StatusInternalServerError)
+		_, err = w.Write([]byte(errMsg))
+		if err != nil {
+			log.Printf("error writing output: %s", err)
 		}
-		return r, err
+		return
 	}
 	defer nc.Close()
 
-	s := req.Header.Get("nats-subject")
+	s := r.Header.Get("nats-subject")
 	if s != "" {
 		subject = s
 	}
@@ -52,15 +64,17 @@ func Handle(req handler.Request) (handler.Response, error) {
 	if err != nil {
 		log.Println(err)
 
-		r := handler.Response{
-			Body:       []byte(fmt.Sprintf("can not publish to nats: %s", err)),
-			StatusCode: http.StatusInternalServerError,
+		w.WriteHeader(http.StatusInternalServerError)
+		_, err = w.Write([]byte(fmt.Sprintf("can not publish to nats: %s", err)))
+		if err != nil {
+			log.Printf("error writing output: %s", err)
 		}
-		return r, err
+		return
 	}
 
-	return handler.Response{
-		Body:       []byte(fmt.Sprintf("Published %d bytes to: %q", len(msg), subject)),
-		StatusCode: http.StatusOK,
-	}, nil
+	w.WriteHeader(http.StatusOK)
+	_, err = w.Write([]byte(fmt.Sprintf("Published %d bytes to: %q", len(msg), subject)))
+	if err != nil {
+		log.Printf("error writing output: %s", err)
+	}
 }

@@ -1,19 +1,31 @@
 package function
 
 import (
+	"io/ioutil"
+	"log"
 	"net/http"
-
-	handler "github.com/openfaas/templates-sdk/go-http"
 )
 
 // Handle a function invocation
-func Handle(req handler.Request) (handler.Response, error) {
-	var err error
+func Handle(w http.ResponseWriter, r *http.Request) {
+	var input string
 
-	message := string(req.Body)
+	if r.Body != nil {
+		defer r.Body.Close()
 
-	return handler.Response{
-		Body:       []byte(message),
-		StatusCode: http.StatusOK,
-	}, err
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Printf("error reading body: %s", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		input = string(body)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	_, err := w.Write([]byte(input))
+	if err != nil {
+		log.Printf("error writing output: %s", err)
+	}
 }
