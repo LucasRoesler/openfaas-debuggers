@@ -7,9 +7,9 @@ provider:
 configuration:
   templates:
     - name: golang-middleware
-      source: https://github.com/openfaas-incubator/golang-http-template
+      source: https://github.com/openfaas/golang-http-template
     - name: golang-http
-      source: https://github.com/openfaas-incubator/golang-http-template
+      source: https://github.com/openfaas/golang-http-template
 
 functions:
   status-echo:
@@ -24,6 +24,8 @@ functions:
     lang: golang-http
     handler: ./nats-publisher
     image: ghcr.io/${OWNER:-lucasroesler}/nats-publisher:${TAG:-latest}
+    build-args:
+      GO111MODULE: "on"
     environment:
       nats_url: nats://nats.openfaas:4222
   nats-receiver:
