@@ -3,6 +3,14 @@ provider:
   name: openfaas
   gateway: http://127.0.0.1:8080
 
+
+configuration:
+  templates:
+    - name: golang-middleware
+      source: https://github.com/openfaas-incubator/golang-http-template
+    - name: golang-http
+      source: https://github.com/openfaas-incubator/golang-http-template
+
 functions:
   status-echo:
     lang: golang-middleware
