@@ -37,7 +37,7 @@ jobs:
         with:
           go-version: ^1.15
       - name: Setup git-semver
-        run: go get github.com/mdomke/git-semver
+        run: GO111MODULE=on go get github.com/mdomke/git-semver/v6@v6.0.1
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
