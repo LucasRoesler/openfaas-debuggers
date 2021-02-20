@@ -15,8 +15,8 @@ functions:
   status-echo:
     lang: golang-middleware
     handler: ./status-echo
-    image: ghcr.io/${OWNER:-:lucasroesler}/status-echo:${TAG:-:latest}
+    image: ghcr.io/${OWNER:-lucasroesler}/status-echo:${TAG:-latest}
   echo:
     lang: golang-http
     handler: ./echo
-    image: ghcr.io/${OWNER:-:lucasroesler}/echo:${TAG:-:latest}
+    image: ghcr.io/${OWNER:-lucasroesler}/echo:${TAG:-latest}
