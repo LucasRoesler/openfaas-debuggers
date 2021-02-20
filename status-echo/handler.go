@@ -3,6 +3,7 @@ package function
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -24,6 +25,7 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
+			log.Printf("error reading body: %s", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -41,6 +43,7 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 		Headers: r.Header,
 	})
 	if err != nil {
+		log.Printf("error serializing response: %s", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -48,7 +51,10 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(status)
-	_ = w.Write(resp)
+	_, err = w.Write(resp)
+	if err != nil {
+		log.Printf("error writing output: %s", err)
+	}
 }
 
 func parsePath(r *http.Request) (prefix string, status int) {
