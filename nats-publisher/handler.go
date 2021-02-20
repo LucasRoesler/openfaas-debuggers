@@ -32,7 +32,7 @@ func Handle(req handler.Request) (handler.Response, error) {
 	nc, err := nats.Connect(natsURL)
 	if err != nil {
 		errMsg := fmt.Sprintf("can not connect to nats: %s", err)
-		log.Printf(errMsg)
+		log.Print(errMsg)
 		r := handler.Response{
 			Body:       []byte(errMsg),
 			StatusCode: http.StatusInternalServerError,

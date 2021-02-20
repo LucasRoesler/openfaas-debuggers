@@ -14,22 +14,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: golangci-lint
+      - name: Lint echo
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.31
           working-directory: echo
-      - name: golangci-lint
+      - name: Lint status-echo
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.31
           working-directory: status-echo
-      - name: golangci-lint
+      - name: Lint nats-publisher
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.31
           working-directory: nats-publisher
-      - name: golangci-lint
+      - name: Lint nats-receiver
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.31
