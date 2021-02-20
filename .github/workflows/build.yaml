@@ -24,6 +24,16 @@ jobs:
         with:
           version: v1.31
           working-directory: status-echo
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.31
+          working-directory: nats-publisher
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.31
+          working-directory: nats-receiver
   build:
     runs-on: ubuntu-latest
     steps:

@@ -20,3 +20,15 @@ functions:
     lang: golang-http
     handler: ./echo
     image: ghcr.io/${OWNER:-lucasroesler}/echo:${TAG:-latest}
+  nats-publisher:
+    lang: golang-http
+    handler: ./nats-publisher
+    image: ghcr.io/${OWNER:-lucasroesler}/nats-publisher:${TAG:-latest}
+    environment:
+      nats_url: nats://nats.openfaas:4222
+  nats-receiver:
+    lang: golang-http
+    handler: ./nats-receiver
+    image: ghcr.io/${OWNER:-lucasroesler}/nats-receiver:${TAG:-latest}
+    annotations:
+      topic: "nats-test"

@@ -97,3 +97,29 @@ This repo contains several functions that can be helpful to testing or debugging
     }
     }
     ```
+
+3. `nats-publisher` - is a test function to use with the [`nats-connector`](https://github.com/openfaas/nats-connector). It can be configured to send messages to a specified NATS topic. The default topic is `nats-test`
+
+    ```sh
+    $ faas-cli deploy \
+        --name publish-message \
+        --image ghcr.io/lucasroesler/nats-publisher:latest \
+        --fprocess='./handler' \
+        --env nats_url=nats://nats.openfaas:4222
+    $ faas-cli invoke publish-message <<< "test message"
+    $ faas-cli invoke publish-message -H "nats-subject=alerts" <<< "test message"
+    ```
+
+4. `nats-reciever` - is a test function to use with the [`nats-connector`](https://github.com/openfaas/nats-connector). It can be configured at deploy time via the annotations to receive messages from a NATS topic. The received messages are then echoed to the logs for debugging
+
+    ```sh
+    $ faas-cli deploy \
+        --name receive-message \
+        --image ghcr.io/lucasroesler/nats-receiver:latest \
+        --fprocess='./handler' \
+        --annotation topic="nats-test"
+    $ faas-cli logs receive-message --tail
+    ```
+
+    **Note:**
+    a) this requires `nats-connector` to be installed and configured correct, see the README [instructions](https://github.com/openfaas/nats-connector#deploy-on-kubernetes)
