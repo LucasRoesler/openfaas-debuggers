@@ -42,7 +42,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Get TAG
         id: get_tag
-        run: echo ::set-output name=tag::"$(git-semver)"
+        run: echo ::set-output name=tag::"$(git describe --tags --always)"
       - name: Get Repo Owner
         id: get_repo_owner
         run: >
@@ -65,6 +65,5 @@ jobs:
           OWNER="${{ steps.get_repo_owner.outputs.repo_owner }}"
           TAG="${{ steps.get_tag.outputs.tag }}"
           faas-cli publish
-          --extra-tag ${{ github.sha }}
           --build-label org.opencontainers.image.source=https://github.com/${{ github.repository }}
           --platforms linux/amd64,linux/arm/v7,linux/arm64
