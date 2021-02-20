@@ -48,6 +48,12 @@ jobs:
         run: >
           echo ::set-output name=repo_owner::$(echo ${{ github.repository_owner }} |
           tr '[:upper:]' '[:lower:]')
+      - name: Debug variables
+        run: |
+          echo "repo_owner: ${{ steps.get_repo_owner.outputs.repo_owner }}"
+          echo "tag: ${{ steps.get_tag.outputs.tag }}"
+          echo "repo: ${{ github.repository }}"
+          echo "go: $(go env)"
       - name: Login to Docker Registry
         uses: docker/login-action@v1
         with:
@@ -57,7 +63,8 @@ jobs:
       - name: Publish functions
         run: >
           OWNER="${{ steps.get_repo_owner.outputs.repo_owner }}"
-          TAG="$(git-semver)"
+          TAG="${{ steps.get_tag.outputs.tag }}"
           faas-cli publish
+          --extra-tag ${{ github.sha }}
           --build-label org.opencontainers.image.source=https://github.com/${{ github.repository }}
           --platforms linux/amd64,linux/arm/v7,linux/arm64
