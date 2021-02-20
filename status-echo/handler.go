@@ -48,7 +48,7 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(status)
-	w.Write(resp)
+	_ = w.Write(resp)
 }
 
 func parsePath(r *http.Request) (prefix string, status int) {
