@@ -61,4 +61,5 @@ jobs:
           OWNER="${{ steps.get_repo_owner.outputs.repo_owner }}"
           TAG="${{ steps.get_tag.outputs.tag }}"
           faas-cli publish
+          --build-label org.opencontainers.image.source https://github.com/${{ github.repository }}
           --platforms linux/amd64,linux/arm/v7,linux/arm64
