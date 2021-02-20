@@ -1,0 +1,13 @@
+version: 1.0
+provider:
+  name: openfaas
+  gateway: http://127.0.0.1:8080
+functions:
+  status-echo:
+    lang: golang-middleware
+    handler: ./status-echo
+    image: ghcr.io/lucasroesler/status-echo:latest
+  echo:
+    lang: golang-http
+    handler: ./echo
+    image: ghcr.io/lucasroesler/echo:latest
