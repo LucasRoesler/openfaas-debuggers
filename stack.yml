@@ -18,6 +18,14 @@ functions:
     lang: golang-middleware
     handler: ./echo
     image: ghcr.io/${OWNER:-lucasroesler}/echo:${TAG:-latest}
+  dig-alpine:
+    lang: dockerfile
+    handler: ./dig-alpine
+    image: ghcr.io/${OWNER:-lucasroesler}/dig-alpine:${TAG:-latest}
+  dig-debian:
+    lang: dockerfile
+    handler: ./dig-debian
+    image: ghcr.io/${OWNER:-lucasroesler}/dig-debian:${TAG:-latest}
   nats-publisher:
     lang: golang-middleware
     handler: ./nats-publisher
